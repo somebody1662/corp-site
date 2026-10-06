@@ -20,7 +20,7 @@ npm run dev          # 本地预览 http://localhost:4321
 ## 构建与部署
 
 ```bash
-npm run build:prod   # = KEYSTATIC=false astro build && pagefind --site dist
+npm run build:prod   # = cross-env KEYSTATIC=false astro build && pagefind --site dist（Windows/Linux 通用）
 git push origin main # Cloudflare 自动构建部署
 ```
 
