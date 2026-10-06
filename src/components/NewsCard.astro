@@ -1,0 +1,50 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import FormattedDate from './FormattedDate.astro';
+
+interface Props {
+	item: CollectionEntry<'news'>;
+}
+
+const { item } = Astro.props;
+const { title, category, pubDate, summary } = item.data;
+---
+
+<a class="row" href={`/news/${item.id}/`}>
+	<time datetime={pubDate.toISOString()}><FormattedDate date={pubDate} /></time>
+	<span class="tag">{category}</span>
+	<h3>{title}</h3>
+	<p>{summary}</p>
+</a>
+<style>
+	.row {
+		display: block;
+		padding: 1.1em 0.2em;
+		border-bottom: 1px solid rgb(var(--gray-light));
+		text-decoration: none;
+		border-bottom-color: rgb(var(--gray-light));
+	}
+	.row:hover {
+		background: rgba(var(--gray-light), 20%);
+	}
+	time {
+		font-family: Consolas, monospace;
+		font-size: 0.78em;
+		color: var(--accent);
+		margin-right: 0.8em;
+	}
+	h3 {
+		margin: 0.35em 0 0.4em;
+		font-size: 1.15em;
+	}
+	p {
+		margin: 0;
+		font-size: 0.9em;
+		color: rgb(var(--gray));
+		line-height: 1.7;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+</style>

@@ -1,0 +1,185 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE_TITLE, SITE_PHONE, SITE_EMAIL, SITE_ADDRESS, SITE_WECHAT } from '../consts';
+
+const hasContact =
+	SITE_PHONE !== '待补充' || SITE_EMAIL !== '待补充' || SITE_ADDRESS !== '待补充' || SITE_WECHAT !== '待补充';
+---
+
+<BaseLayout title="联系我们" description={`联系${SITE_TITLE}：获取保安岗亭与民宿房屋报价与方案。`} jsonLd={JSON.stringify({
+	'@context': 'https://schema.org',
+	'@type': 'ContactPage',
+	name: '联系我们',
+})}>
+	<header class="page-head">
+		<p class="kicker">CONTACT</p>
+		<h1>联系我们</h1>
+		<p>提交需求，我们将在 1 个工作日内回复</p>
+	</header>
+
+	<div class="grid">
+		<form class="form" action="https://api.web3forms.com/submit" method="POST">
+			<input type="hidden" name="access_key" value="WEB3FORMS_ACCESS_KEY" />
+			<input type="hidden" name="subject" value="来自企业官网的询盘" />
+			<input type="hidden" name="from_name" value={SITE_TITLE} />
+			<label>
+				姓名
+				<input type="text" name="name" required placeholder="您的称呼" />
+			</label>
+			<label>
+				联系电话
+				<input type="tel" name="phone" required placeholder="方便我们与您联系" />
+			</label>
+			<label>
+				需求类型
+				<select name="type">
+					<option value="保安岗亭">保安岗亭</option>
+					<option value="民宿房屋">民宿房屋</option>
+					<option value="其他">其他</option>
+				</select>
+			</label>
+			<label>
+				需求描述
+				<textarea name="message" rows="5" required placeholder="请描述您的需求，如数量、尺寸、使用场景等"></textarea>
+			</label>
+			<button class="btn" type="submit">提交询盘</button>
+			<p class="hint">提交后系统将自动发送邮件至公司邮箱（需要配置 Web3Forms 收件邮箱）。</p>
+		</form>
+
+		<aside class="side">
+			<h2>联系方式</h2>
+			{hasContact ? (
+				<ul class="info">
+					{SITE_PHONE !== '待补充' && <li><span class="k">电话</span><a href={`tel:${SITE_PHONE}`}>{SITE_PHONE}</a></li>}
+					{SITE_EMAIL !== '待补充' && <li><span class="k">邮箱</span><a href={`mailto:${SITE_EMAIL}`}>{SITE_EMAIL}</a></li>}
+					{SITE_ADDRESS !== '待补充' && <li><span class="k">地址</span>{SITE_ADDRESS}</li>}
+					{SITE_WECHAT !== '待补充' && <li><span class="k">微信</span>{SITE_WECHAT}</li>}
+				</ul>
+			) : (
+				<p>联系信息待补充，请稍后访问或通过表单留言。</p>
+			)}
+			<h2>服务范围</h2>
+			<p class="scope">保安岗亭与民宿房屋的方案设计、生产制造、物流配送与现场安装，支持全国服务。</p>
+		</aside>
+	</div>
+</BaseLayout>
+
+<style>
+	.page-head {
+		padding: 2.2em 0 1.2em;
+		border-bottom: 1px solid rgb(var(--gray-light));
+		margin-bottom: 1.6em;
+	}
+	.kicker {
+		font-family: Consolas, monospace;
+		font-size: 0.78em;
+		letter-spacing: 0.22em;
+		color: var(--accent);
+		margin-bottom: 0.6em;
+	}
+	.page-head h1 {
+		margin: 0 0 0.2em;
+	}
+	.page-head p {
+		margin: 0;
+		color: rgb(var(--gray));
+	}
+	.grid {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) 320px;
+		gap: 2.4em;
+		padding-bottom: 3em;
+	}
+	.form {
+		display: flex;
+		flex-direction: column;
+		gap: 1.1em;
+	}
+	.form label {
+		display: flex;
+		flex-direction: column;
+		gap: 0.4em;
+		font-size: 0.92em;
+		color: rgb(var(--gray-dark));
+	}
+	.form input,
+	.form select,
+	.form textarea {
+		padding: 0.7em 0.9em;
+		border: 1px solid rgb(var(--gray-light));
+		border-radius: 4px;
+		background: #fffdf9;
+		font-size: 16px;
+		font-family: inherit;
+		color: rgb(var(--gray-dark));
+	}
+	.form input:focus,
+	.form select:focus,
+	.form textarea:focus {
+		outline: none;
+		border-color: var(--accent);
+	}
+	.btn {
+		align-self: flex-start;
+		padding: 0.75em 2em;
+		background: var(--accent);
+		color: #fff;
+		border: none;
+		border-radius: 4px;
+		cursor: pointer;
+		font-size: 1em;
+		font-family: inherit;
+	}
+	.btn:hover {
+		background: var(--accent-dark);
+	}
+	.hint {
+		font-size: 0.8em;
+		color: rgb(var(--gray));
+		margin: 0;
+	}
+	.side {
+		border-left: 1px solid rgb(var(--gray-light));
+		padding-left: 1.6em;
+	}
+	.side h2 {
+		font-size: 1.1em;
+		margin-top: 0;
+	}
+	.side h2 + h2 {
+		margin-top: 1.6em;
+	}
+	.info {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+	.info li {
+		margin-bottom: 0.9em;
+		display: flex;
+		flex-direction: column;
+		gap: 0.15em;
+	}
+	.k {
+		font-family: Consolas, monospace;
+		font-size: 0.75em;
+		color: var(--accent);
+		letter-spacing: 0.08em;
+	}
+	.scope {
+		color: rgb(var(--gray));
+		font-size: 0.92em;
+		line-height: 1.8;
+	}
+	@media (max-width: 720px) {
+		.grid {
+			grid-template-columns: 1fr;
+		}
+		.side {
+			border-left: none;
+			padding-left: 0;
+			border-top: 1px solid rgb(var(--gray-light));
+			padding-top: 1.4em;
+		}
+	}
+</style>

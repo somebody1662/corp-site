@@ -1,0 +1,51 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import NewsCard from '../../components/NewsCard.astro';
+
+const news = (await getCollection('news'))
+	.filter((n) => !n.data.draft)
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<BaseLayout title="新闻动态" description="森度智能公司新闻与行业资讯。" jsonLd={JSON.stringify({
+	'@context': 'https://schema.org',
+	'@type': 'Blog',
+	name: '新闻动态',
+})}>
+	<header class="page-head">
+		<p class="kicker">NEWS</p>
+		<h1>新闻动态</h1>
+		<p>公司动态与行业观察</p>
+	</header>
+
+	<div class="news-list">
+		{news.length > 0 ? news.map((n) => <NewsCard item={n} />) : <p>暂无内容</p>}
+	</div>
+</BaseLayout>
+
+<style>
+	.page-head {
+		padding: 2.2em 0 1.2em;
+		border-bottom: 1px solid rgb(var(--gray-light));
+		margin-bottom: 1.6em;
+	}
+	.kicker {
+		font-family: Consolas, monospace;
+		font-size: 0.78em;
+		letter-spacing: 0.22em;
+		color: var(--accent);
+		margin-bottom: 0.6em;
+	}
+	.page-head h1 {
+		margin: 0 0 0.2em;
+	}
+	.page-head p {
+		margin: 0;
+		color: rgb(var(--gray));
+	}
+	.news-list {
+		max-width: 760px;
+		padding-bottom: 2em;
+	}
+</style>

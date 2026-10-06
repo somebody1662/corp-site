@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://corp-site.sport17697287.workers.dev/sitemap-index.xml

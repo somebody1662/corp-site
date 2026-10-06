@@ -1,0 +1,108 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProductCard from '../../components/ProductCard.astro';
+
+const products = (await getCollection('products'))
+	.filter((p) => !p.data.draft)
+	.sort((a, b) => a.data.sortOrder - b.data.sortOrder);
+const categories = ['保安岗亭', '民宿房屋'];
+---
+
+<BaseLayout title="产品中心" description="保安岗亭与民宿房屋产品：不锈钢岗亭、智能收费岗亭、集装箱民宿、移动木屋等，支持定制。" jsonLd={JSON.stringify({
+	'@context': 'https://schema.org',
+	'@type': 'CollectionPage',
+	name: '产品中心',
+})}>
+	<header class="page-head">
+		<p class="kicker">PRODUCTS</p>
+		<h1>产品中心</h1>
+		<p>两大产品线，支持按需定制</p>
+	</header>
+
+	<nav class="tabs" aria-label="产品分类">
+		<button class="tab-btn active" data-cat="all">全部</button>
+		{categories.map((c) => <button class="tab-btn" data-cat={c}>{c}</button>)}
+	</nav>
+
+	<div class="card-grid">
+		{products.map((p) => (
+			<div data-category={p.data.category} style="display:block">
+				<ProductCard product={p} />
+			</div>
+		))}
+	</div>
+
+	<script>
+		const tabs = document.querySelectorAll('.tab-btn');
+		const cards = document.querySelectorAll('[data-category]');
+		const params = new URLSearchParams(window.location.search);
+		const initial = params.get('cat');
+
+		function applyFilter(cat) {
+			tabs.forEach((t) => t.classList.toggle('active', t.dataset.cat === cat));
+			cards.forEach((card) => {
+				card.style.display = cat === 'all' || card.dataset.category === cat ? '' : 'none';
+			});
+		}
+
+		if (initial) {
+			applyFilter(initial);
+		}
+
+		tabs.forEach((tab) => {
+			tab.addEventListener('click', () => applyFilter(tab.dataset.cat));
+		});
+	</script>
+</BaseLayout>
+
+<style>
+	.page-head {
+		padding: 2.2em 0 1.2em;
+		border-bottom: 1px solid rgb(var(--gray-light));
+	}
+	.kicker {
+		font-family: Consolas, monospace;
+		font-size: 0.78em;
+		letter-spacing: 0.22em;
+		color: var(--accent);
+		margin-bottom: 0.6em;
+	}
+	.page-head h1 {
+		margin: 0 0 0.2em;
+	}
+	.page-head p {
+		margin: 0;
+		color: rgb(var(--gray));
+	}
+
+	.tabs {
+		display: flex;
+		gap: 0.6em;
+		padding: 1.4em 0 0.6em;
+		border-bottom: 1px solid rgb(var(--gray-light));
+		margin-bottom: 1.6em;
+	}
+	.tab-btn {
+		font-family: Consolas, monospace;
+		font-size: 0.88em;
+		padding: 0.45em 1.2em;
+		background: var(--tag-bg);
+		color: rgb(var(--gray-dark));
+		border: 1px solid rgb(var(--gray-light));
+		border-radius: 3px;
+		cursor: pointer;
+	}
+	.tab-btn.active {
+		background: var(--accent);
+		color: #fff;
+		border-color: var(--accent);
+	}
+
+	.card-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+		gap: 1.4em;
+		padding-bottom: 2em;
+	}
+</style>

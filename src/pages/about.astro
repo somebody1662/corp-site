@@ -1,0 +1,52 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE_TITLE } from '../consts';
+
+const about = (await getCollection('about')).filter((a) => a.id === 'about');
+const entry = about[0];
+const { Content } = entry ? await render(entry) : { Content: null };
+
+const jsonLd = JSON.stringify({
+	'@context': 'https://schema.org',
+	'@type': 'AboutPage',
+	name: '关于我们',
+});
+---
+
+<BaseLayout title="关于我们" description={`${SITE_TITLE}：专注保安岗亭与民宿房屋的设计、生产与安装。`} jsonLd={jsonLd}>
+	<header class="page-head">
+		<p class="kicker">ABOUT</p>
+		<h1>关于我们</h1>
+	</header>
+
+	{Content ? (
+		<div class="prose body">
+			<Content />
+		</div>
+	) : (
+		<p>关于我们内容待补充。</p>
+	)}
+</BaseLayout>
+
+<style>
+	.page-head {
+		padding: 2.2em 0 1.2em;
+		border-bottom: 1px solid rgb(var(--gray-light));
+		margin-bottom: 1.6em;
+	}
+	.kicker {
+		font-family: Consolas, monospace;
+		font-size: 0.78em;
+		letter-spacing: 0.22em;
+		color: var(--accent);
+		margin-bottom: 0.6em;
+	}
+	.page-head h1 {
+		margin: 0;
+	}
+	.body {
+		max-width: 720px;
+		padding-bottom: 2em;
+	}
+</style>
