@@ -27,6 +27,8 @@ git push origin main # Cloudflare 自动构建部署
 线上地址：https://corp-site.sport17697287.workers.dev
 代码仓库：https://github.com/somebody1662/corp-site
 
+CI：`.github/workflows/ci.yml` 在每次 push / PR 时执行 `npm ci` + `npm run build:prod`，构建失败即阻断合并。
+
 ## 内容管理
 
 所有内容为 `src/content/` 下的 Markdown/MDX 文件，两种方式维护：
